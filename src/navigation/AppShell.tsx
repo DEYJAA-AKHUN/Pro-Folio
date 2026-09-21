@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-na
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../theme/ThemeContext";
 import { mockProfile } from "../data/mockProfile";
+import type { Profile } from "../types/profile";
 import { DashboardScreen } from "../screens/DashboardScreen";
 import { ProfileScreen } from "../screens/ProfileScreen";
 import { CareerScreen } from "../screens/CareerScreen";
@@ -16,8 +17,16 @@ const icons: Record<Tab,string> = { Home:"⌂", Profile:"●", Career:"◆", Por
 
 export function AppShell() {
   const [tab,setTab] = useState<Tab>("Home");
+  const [profile,setProfile] = useState<Profile>(mockProfile);
   const { colors, themeName } = useTheme();
-  const content = { Home:<DashboardScreen profile={mockProfile}/>, Profile:<ProfileScreen profile={mockProfile}/>, Career:<CareerScreen profile={mockProfile}/>, Portfolio:<PortfolioScreen profile={mockProfile}/>, Timeline:<TimelineScreen profile={mockProfile}/>, Settings:<SettingsScreen/> }[tab];
+  const content = {
+    Home:<DashboardScreen profile={profile}/>,
+    Profile:<ProfileScreen profile={profile} onSave={setProfile}/>,
+    Career:<CareerScreen profile={profile}/>,
+    Portfolio:<PortfolioScreen profile={profile}/>,
+    Timeline:<TimelineScreen profile={profile}/>,
+    Settings:<SettingsScreen/>
+  }[tab];
   const dark = ["midnight","obsidian","titanium"].includes(themeName);
   return <SafeAreaView style={[styles.safe,{backgroundColor:colors.background}]}>
     <StatusBar style={dark ? "light" : "dark"}/>
