@@ -5,9 +5,9 @@ import { useTheme } from "../theme/ThemeContext";
 type Mode="signin"|"signup"|"reset";
 export function AuthScreen({onAuthenticated}:{onAuthenticated:(isNewUser:boolean)=>void}){
  const {colors}=useTheme(); const [mode,setMode]=useState<Mode>("signin"); const [name,setName]=useState(""); const [email,setEmail]=useState(""); const [password,setPassword]=useState(""); const submit=async()=>{
-  if(!email.trim()||!password.trim()||(mode==="signup"&&!name.trim()))return;
+  if(!email.trim()||(mode==="signup"&&!name.trim())||(mode==="signin"&&!password.trim()))return;
   if(mode==="signup"){const existing=await getAccount();if(existing){Alert.alert("Account exists","Use Sign In for this device.");return;}await createAccount({name:name.trim(),email:email.trim(),password});onAuthenticated(true);return;}
-  if(mode==="reset"){const ok=await resetPassword(email,password);Alert.alert(ok?"Password updated":"Account not found",ok?"You can sign in with the new password.":"No local account matches that email.");if(ok)setMode("signin");return;}
+  if(mode==="reset"){const ok=await resetPassword(email);Alert.alert(ok?"Reset email sent":"Unable to send reset email",ok?"Check your email for the Firebase password reset link.":"Check the email address and Firebase configuration.");if(ok)setMode("signin");return;}
   const ok=await signIn(email,password);if(ok)onAuthenticated(false);else Alert.alert("Sign in failed","The email or password does not match the local account.");
  };
  return <KeyboardAvoidingView style={[styles.safe,{backgroundColor:colors.background}]} behavior={Platform.OS==="ios"?"padding":undefined}><View style={styles.container}>
@@ -15,7 +15,7 @@ export function AuthScreen({onAuthenticated}:{onAuthenticated:(isNewUser:boolean
   <View style={[styles.card,{backgroundColor:colors.surfaceRaised,borderColor:colors.border}]}>
    {mode==="signup"&&<TextInput value={name} onChangeText={setName} placeholder="Full name" placeholderTextColor={colors.textMuted} style={[styles.input,{color:colors.text,borderColor:colors.border,backgroundColor:colors.surface}]}/>}
    <TextInput value={email} onChangeText={setEmail} placeholder="Email address" placeholderTextColor={colors.textMuted} style={[styles.input,{color:colors.text,borderColor:colors.border,backgroundColor:colors.surface}]} keyboardType="email-address" autoCapitalize="none"/>
-   <TextInput value={password} onChangeText={setPassword} placeholder={mode==="reset"?"New password":"Password"} placeholderTextColor={colors.textMuted} style={[styles.input,{color:colors.text,borderColor:colors.border,backgroundColor:colors.surface}]} secureTextEntry/>
+   <TextInput value={password} onChangeText={setPassword} placeholder="Password" placeholderTextColor={colors.textMuted} style={[styles.input,{color:colors.text,borderColor:colors.border,backgroundColor:colors.surface}]} secureTextEntry/>
    {mode==="signin"&&<TouchableOpacity onPress={()=>setMode("reset")}><Text style={[styles.forgot,{color:colors.accent}]}>Forgot password?</Text></TouchableOpacity>}
    <TouchableOpacity style={[styles.button,{backgroundColor:colors.accent}]} onPress={submit}><Text style={styles.buttonText}>{mode==="signup"?"Create Account":mode==="reset"?"Reset Password":"Sign In"}</Text></TouchableOpacity>
   </View>
