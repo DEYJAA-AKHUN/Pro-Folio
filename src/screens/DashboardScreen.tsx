@@ -1,57 +1,15 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { SectionRow } from "../components/SectionRow";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../theme/ThemeContext";
 import type { Profile } from "../types/profile";
-
-type Props = { profile: Profile };
-
-export function DashboardScreen({ profile }: Props) {
-  const { colors } = useTheme();
-  const completion = calculateCompletion(profile);
-  const sections = [
-    ["Profile", "Identity, contact details and professional headline"],
-    ["Career", "Education, employment and work history"],
-    ["Projects", "Personal, academic and professional projects"],
-    ["Skills", "Technical, professional and interpersonal skills"],
-    ["Credentials", "Certifications, achievements and supporting documents"],
-  ] as const;
-  return <ScrollView contentContainerStyle={styles.container}>
-    <View style={styles.topRow}>
-      <View><Text style={[styles.eyebrow, { color: colors.accent }]}>PRO-FILIO</Text><Text style={[styles.title, { color: colors.text }]}>Your professional identity.</Text></View>
-      <View style={[styles.avatar, { backgroundColor: colors.accentSoft }]}><Text style={[styles.avatarText, { color: colors.accent }]}>{profile.fullName === "Your Name" ? "P" : profile.fullName.charAt(0).toUpperCase()}</Text></View>
-    </View>
-    <Text style={[styles.subtitle, { color: colors.textSecondary }]}>One profile. One source of truth. Everything important in one place.</Text>
-    <View style={[styles.card, { backgroundColor: colors.surfaceRaised, borderColor: colors.border }]}>
-      <View style={styles.metricRow}><View><Text style={[styles.label, { color: colors.textMuted }]}>PROFILE COMPLETION</Text><Text style={[styles.percent, { color: colors.text }]}>{completion}%</Text></View><View style={[styles.scoreCircle, { borderColor: colors.accent }]}><Text style={[styles.scoreText, { color: colors.accent }]}>{completion}</Text></View></View>
-      <View style={[styles.track, { backgroundColor: colors.track }]}><View style={[styles.progress, { width: completion + "%", backgroundColor: colors.accent }]} /></View>
-      <Text style={[styles.muted, { color: colors.textMuted }]}>{completion === 0 ? "Start building your professional profile." : "Keep building your professional profile."}</Text>
-    </View>
-    <Text style={[styles.section, { color: colors.text }]}>Workspace</Text>
-    {sections.map(([title, description]) => <SectionRow key={title} title={title} description={description} letter={title[0]} />)}
-  </ScrollView>;
+export function DashboardScreen({profile,onManage}:{profile:Profile;onManage:()=>void}){
+ const {colors}=useTheme(); const completion=calculateCompletion(profile);
+ const stats=[["Education",profile.education.length],["Career",profile.employment.length],["Projects",profile.projects.length],["Skills",profile.skills.length],["Credentials",profile.certifications.length+profile.achievements.length]];
+ return <ScrollView contentContainerStyle={styles.container}><View style={styles.top}><View style={{flex:1}}><Text style={[styles.eyebrow,{color:colors.accent}]}>PRO-FILIO</Text><Text style={[styles.title,{color:colors.text}]}>Your professional identity.</Text></View><View style={[styles.avatar,{backgroundColor:colors.accentSoft}]}><Text style={[styles.avatarText,{color:colors.accent}]}>{profile.fullName==="Your Name"?"P":profile.fullName.charAt(0).toUpperCase()}</Text></View></View>
+ <Text style={[styles.subtitle,{color:colors.textSecondary}]}>One profile. One source of truth. Everything important in one place.</Text>
+ <View style={[styles.card,{backgroundColor:colors.surfaceRaised,borderColor:colors.border}]}><View style={styles.metric}><View><Text style={[styles.label,{color:colors.textMuted}]}>PROFILE COMPLETION</Text><Text style={[styles.percent,{color:colors.text}]}>{completion}%</Text></View><View style={[styles.circle,{borderColor:colors.accent}]}><Text style={[styles.circleText,{color:colors.accent}]}>{completion}</Text></View></View><View style={[styles.track,{backgroundColor:colors.track}]}><View style={[styles.progress,{width:completion+"%",backgroundColor:colors.accent}]}/></View><Text style={[styles.muted,{color:colors.textMuted}]}>Complete the record once, then reuse it everywhere.</Text></View>
+ <View style={styles.statGrid}>{stats.map(([label,value])=><View key={label} style={[styles.stat,{backgroundColor:colors.surfaceRaised,borderColor:colors.border}]}><Text style={[styles.statValue,{color:colors.text}]}>{value}</Text><Text style={[styles.statLabel,{color:colors.textMuted}]}>{label}</Text></View>)}</View>
+ <TouchableOpacity onPress={onManage} style={[styles.button,{backgroundColor:colors.accent}]}><Text style={styles.buttonText}>Build / edit professional data</Text></TouchableOpacity>
+ <Text style={[styles.section,{color:colors.text}]}>Core modules</Text>{["Profile","Education & Employment","Skills & Expertise","Projects & Portfolio","Certifications & Achievements","Timeline & Documents","Public profile & sharing"].map((x,i)=><View key={x} style={[styles.row,{backgroundColor:colors.surface,borderColor:colors.border}]}><Text style={[styles.index,{color:colors.accent}]}>{String(i+1).padStart(2,"0")}</Text><Text style={[styles.rowText,{color:colors.text}]}>{x}</Text></View>)}</ScrollView>;
 }
-
-function calculateCompletion(profile: Profile) {
-  const checks = [Boolean(profile.fullName && profile.fullName !== "Your Name"), Boolean(profile.headline && profile.headline !== "Professional profile in progress"), Boolean(profile.summary), Boolean(profile.email), profile.education.length > 0, profile.employment.length > 0, profile.projects.length > 0, profile.skills.length > 0, profile.certifications.length > 0 || profile.achievements.length > 0];
-  return Math.round((checks.filter(Boolean).length / checks.length) * 100);
-}
-
-const styles = StyleSheet.create({
-  container: { padding: 22, paddingBottom: 48 },
-  topRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
-  eyebrow: { fontSize: 12, fontWeight: "800", letterSpacing: 2.2 },
-  title: { fontSize: 30, lineHeight: 36, fontWeight: "800", marginTop: 8, maxWidth: 280 },
-  avatar: { width: 48, height: 48, borderRadius: 17, alignItems: "center", justifyContent: "center" },
-  avatarText: { fontSize: 19, fontWeight: "800" },
-  subtitle: { fontSize: 15, lineHeight: 22, marginTop: 10, marginBottom: 24 },
-  card: { borderRadius: 22, padding: 20, borderWidth: 1 },
-  metricRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  label: { fontSize: 10, fontWeight: "800", letterSpacing: 1.5 },
-  percent: { fontSize: 34, fontWeight: "800", marginTop: 6 },
-  scoreCircle: { width: 54, height: 54, borderRadius: 27, borderWidth: 3, alignItems: "center", justifyContent: "center" },
-  scoreText: { fontSize: 14, fontWeight: "800" },
-  track: { height: 8, borderRadius: 99, marginTop: 16, overflow: "hidden" },
-  progress: { height: "100%", borderRadius: 99 },
-  muted: { fontSize: 12, marginTop: 11 },
-  section: { fontSize: 20, fontWeight: "800", marginTop: 30, marginBottom: 12 },
-});
+function calculateCompletion(p:Profile){const checks=[p.fullName!=="Your Name"&&!!p.fullName,p.headline!=="Professional profile in progress"&&!!p.headline,!!p.summary,!!p.email,!!p.location,p.education.length>0,p.employment.length>0,p.projects.length>0,p.skills.length>0,p.certifications.length>0||p.achievements.length>0,p.documents.length>0];return Math.round(checks.filter(Boolean).length/checks.length*100);}
+const styles=StyleSheet.create({container:{padding:22,paddingBottom:48},top:{flexDirection:"row",alignItems:"flex-start"},eyebrow:{fontSize:12,fontWeight:"800",letterSpacing:2.2},title:{fontSize:30,lineHeight:36,fontWeight:"800",marginTop:8},avatar:{width:48,height:48,borderRadius:17,alignItems:"center",justifyContent:"center"},avatarText:{fontSize:19,fontWeight:"800"},subtitle:{fontSize:15,lineHeight:22,marginTop:10,marginBottom:24},card:{borderRadius:22,padding:20,borderWidth:1},metric:{flexDirection:"row",justifyContent:"space-between",alignItems:"center"},label:{fontSize:10,fontWeight:"800",letterSpacing:1.5},percent:{fontSize:34,fontWeight:"800",marginTop:6},circle:{width:54,height:54,borderRadius:27,borderWidth:3,alignItems:"center",justifyContent:"center"},circleText:{fontSize:13,fontWeight:"800"},track:{height:8,borderRadius:99,marginTop:16,overflow:"hidden"},progress:{height:"100%",borderRadius:99},muted:{fontSize:12,marginTop:11},statGrid:{flexDirection:"row",flexWrap:"wrap",gap:8,marginTop:12},stat:{width:"31.5%",minHeight:72,borderRadius:15,borderWidth:1,padding:10},statValue:{fontSize:20,fontWeight:"900"},statLabel:{fontSize:10,marginTop:3},button:{height:50,borderRadius:14,alignItems:"center",justifyContent:"center",marginTop:14},buttonText:{color:"#FFF",fontWeight:"800"},section:{fontSize:20,fontWeight:"800",marginTop:28,marginBottom:10},row:{flexDirection:"row",alignItems:"center",borderWidth:1,borderRadius:14,padding:14,marginBottom:7},index:{fontWeight:"900",width:32},rowText:{fontSize:14,fontWeight:"700"}});
