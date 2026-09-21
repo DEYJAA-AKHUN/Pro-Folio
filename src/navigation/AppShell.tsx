@@ -15,13 +15,15 @@ type Tab = "Home" | "Profile" | "Career" | "Portfolio" | "Timeline" | "Settings"
 const tabs: Tab[] = ["Home", "Profile", "Career", "Portfolio", "Timeline", "Settings"];
 const icons: Record<Tab,string> = { Home:"⌂", Profile:"●", Career:"◆", Portfolio:"▣", Timeline:"│", Settings:"⚙" };
 
-export function AppShell() {
+export function AppShell({ profile, onProfileChange }: { profile?: Profile; onProfileChange?: (profile: Profile) => void }) {
   const [tab,setTab] = useState<Tab>("Home");
-  const [profile,setProfile] = useState<Profile>(mockProfile);
+  const [localProfile,setLocalProfile] = useState<Profile>(profile ?? mockProfile);
   const { colors, themeName } = useTheme();
+  const currentProfile = profile ?? localProfile;
+  const saveProfile = onProfileChange ?? setLocalProfile;
   const content = {
-    Home:<DashboardScreen profile={profile}/>,
-    Profile:<ProfileScreen profile={profile} onSave={setProfile}/>,
+    Home:<DashboardScreen profile={currentProfile}/>,
+    Profile:<ProfileScreen profile={profile} onSave={saveProfile}/>,
     Career:<CareerScreen profile={profile}/>,
     Portfolio:<PortfolioScreen profile={profile}/>,
     Timeline:<TimelineScreen profile={profile}/>,
