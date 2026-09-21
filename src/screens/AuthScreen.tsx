@@ -4,7 +4,7 @@ import { useTheme } from "../theme/ThemeContext";
 
 type Mode = "signin" | "signup";
 
-export function AuthScreen({ onAuthenticated }: { onAuthenticated: () => void }) {
+export function AuthScreen({ onAuthenticated }: { onAuthenticated: (isNewUser: boolean) => void }) {
   const { colors } = useTheme();
   const [mode, setMode] = useState<Mode>("signin");
   const [name, setName] = useState("");
@@ -13,7 +13,7 @@ export function AuthScreen({ onAuthenticated }: { onAuthenticated: () => void })
 
   const submit = () => {
     if (!email.trim() || !password.trim() || (mode === "signup" && !name.trim())) return;
-    onAuthenticated();
+    onAuthenticated(mode === "signup");
   };
 
   return (
