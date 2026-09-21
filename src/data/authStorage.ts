@@ -56,8 +56,9 @@ export async function signIn(email: string, password: string): Promise<boolean> 
   try {
     await signInWithEmailAndPassword(getFirebaseAuth(), email.trim(), password);
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    console.error("Firebase sign-in failed:", error);
+    throw error;
   }
 }
 
@@ -73,7 +74,8 @@ export async function resetPassword(email: string): Promise<boolean> {
   try {
     await sendPasswordResetEmail(getFirebaseAuth(), email.trim());
     return true;
-  } catch {
+  } catch (error) {
+    console.error("Firebase password reset failed:", error);
     return false;
   }
 }
