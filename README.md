@@ -6,8 +6,9 @@ Pro-Filio is a phone-first professional identity workspace built with Expo, Reac
 
 ## Included now
 
-- Local sign up / sign in / password reset
-- Persistent profile data on the device
+- Firebase Email/Password sign up / sign in / password reset
+- Firebase Authentication with persistent mobile session
+- Cloud Firestore profile persistence
 - Guided profile setup
 - Profile editor
 - Education and employment records
@@ -46,7 +47,11 @@ App
 
 ## Important production note
 
-The current authentication and persistence layer is intentionally local-device infrastructure. It is suitable for the working app foundation, but it is **not production-grade account security**. A production release should connect the same profile model to a hosted authentication service, database, file storage and API.
+Authentication and profile persistence are now wired to Firebase. The app expects the Expo public Firebase configuration values in a local `.env.local` file. That file is ignored by Git and must not be committed.
+
+Firebase client configuration is not a password or private server credential because `EXPO_PUBLIC_*` values are bundled into the client app. Security must come from Firebase Authentication and Firestore Security Rules, not from hiding those values.
+
+Before running the app, copy `.env.example` to `.env.local` and fill in the six Firebase Web App values from Firebase Console.
 
 The public profile screen is currently a local preview/share surface. A real public URL, QR code, multi-device sync, verification and recruiter features belong to the hosted backend phase.
 
