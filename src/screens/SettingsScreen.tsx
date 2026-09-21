@@ -1,33 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import { colors } from "../theme/colors";
-
-export function SettingsScreen() {
-  const rows = [
-    ["Privacy", "Control what is visible"],
-    ["Public Profile", "Manage your shareable profile"],
-    ["Account", "Identity, security and account settings"],
-  ];
-  return (
-    <View style={styles.container}>
-      <Text style={styles.eyebrow}>SETTINGS</Text>
-      <Text style={styles.title}>Control your profile</Text>
-      <View style={styles.card}>
-        {rows.map(([title, description]) => <View key={title} style={styles.row}><View style={styles.copy}><Text style={styles.rowTitle}>{title}</Text><Text style={styles.description}>{description}</Text></View><Text style={styles.chevron}>›</Text></View>)}
-      </View>
-      <Text style={styles.note}>Advanced account, privacy, sharing and data controls will live here.</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24 },
-  eyebrow: { color: colors.textMuted, fontSize: 12, fontWeight: "700", letterSpacing: 2 },
-  title: { color: colors.text, fontSize: 28, fontWeight: "800", marginTop: 10, marginBottom: 24 },
-  card: { backgroundColor: colors.surfaceRaised, borderRadius: 18, borderWidth: 1, borderColor: colors.border, overflow: "hidden" },
-  row: { flexDirection: "row", alignItems: "center", padding: 17, borderBottomWidth: 1, borderBottomColor: colors.border },
-  copy: { flex: 1 },
-  rowTitle: { color: colors.text, fontSize: 15, fontWeight: "700" },
-  description: { color: colors.textMuted, fontSize: 12, marginTop: 4 },
-  chevron: { color: "#657080", fontSize: 27 },
-  note: { color: colors.textMuted, fontSize: 13, lineHeight: 19, marginTop: 18 },
-});
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useTheme } from "../theme/ThemeContext";
+import { ThemePicker } from "../components/ThemePicker";
+export function SettingsScreen(){const {colors}=useTheme();const rows=[["Privacy","Control what is visible"],["Public Profile","Manage your shareable profile"],["Account","Identity, security and account settings"]];return <ScrollView contentContainerStyle={styles.container}><Text style={[styles.eyebrow,{color:colors.accent}]}>SETTINGS</Text><Text style={[styles.title,{color:colors.text}]}>Control your profile</Text><View style={[styles.card,{backgroundColor:colors.surfaceRaised,borderColor:colors.border}]}>{rows.map(([title,description])=><View key={title} style={[styles.row,{borderBottomColor:colors.border}]}><View style={styles.copy}><Text style={[styles.rowTitle,{color:colors.text}]}>{title}</Text><Text style={[styles.description,{color:colors.textMuted}]}>{description}</Text></View><Text style={[styles.chevron,{color:colors.textMuted}]}>›</Text></View>)}</View><Text style={[styles.section,{color:colors.text}]}>Appearance</Text><Text style={[styles.note,{color:colors.textSecondary}]}>Choose a visual system. Your selection updates the app immediately.</Text><ThemePicker/><Text style={[styles.footer,{color:colors.textMuted}]}>Pro-Filio • Professional identity workspace</Text></ScrollView>}
+const styles=StyleSheet.create({container:{padding:22,paddingBottom:48},eyebrow:{fontSize:12,fontWeight:"800",letterSpacing:2},title:{fontSize:28,fontWeight:"800",marginTop:9,marginBottom:24},card:{borderRadius:20,borderWidth:1,overflow:"hidden"},row:{flexDirection:"row",alignItems:"center",padding:17,borderBottomWidth:1},copy:{flex:1},rowTitle:{fontSize:15,fontWeight:"700"},description:{fontSize:12,marginTop:4},chevron:{fontSize:27},section:{fontSize:20,fontWeight:"800",marginTop:30,marginBottom:5},note:{fontSize:13,lineHeight:19,marginBottom:13},footer:{fontSize:11,textAlign:"center",marginTop:26}});
