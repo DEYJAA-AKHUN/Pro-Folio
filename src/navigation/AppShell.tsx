@@ -29,7 +29,7 @@ export function AppShell({profile,onProfileChange,onSignOut}:{profile?:Profile;o
   Career:<CareerScreen profile={current} onManage={()=>setOverlay("manage")}/>,
   Portfolio:<PortfolioScreen profile={current} onManage={()=>setOverlay("manage")}/>,
   Timeline:<TimelineScreen profile={current}/>,
-  Settings:<SettingsScreen profile={current} onManage={()=>setOverlay("manage")} onDocuments={()=>setOverlay("documents")} onPublic={()=>setOverlay("public")} onSignOut={onSignOut}/>
+  Settings:<SettingsScreen profile={current} onManage={()=>setOverlay("manage")} onDocuments={()=>setOverlay("documents")} onPublic={()=>setOverlay("public")} onSignOut={onSignOut} onSave={save}/>
  }[tab];
  const dark=["midnight","obsidian","titanium"].includes(themeName);
  return <SafeAreaView style={[styles.safe,{backgroundColor:colors.background}]}><StatusBar style={dark?"light":"dark"}/><View style={styles.content}>{content}</View><View style={[styles.nav,{backgroundColor:colors.surfaceRaised,borderTopColor:colors.border}]}>{tabs.map(item=>{const active=tab===item;return <TouchableOpacity key={item} style={styles.navItem} onPress={()=>setTab(item)}><View style={[styles.navIconWrap,active&&{backgroundColor:colors.accentSoft}]}><Text style={[styles.navIcon,{color:active?colors.accent:colors.textMuted}]}>{icons[item]}</Text></View><Text style={[styles.navLabel,{color:active?colors.accent:colors.textMuted}]}>{item}</Text></TouchableOpacity>})}</View></SafeAreaView>;
