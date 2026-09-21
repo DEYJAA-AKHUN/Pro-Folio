@@ -1,38 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
-import { colors } from "../theme/colors";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useTheme } from "../theme/ThemeContext";
 import type { Profile } from "../types/profile";
-
 export function ProfileScreen({ profile }: { profile: Profile }) {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.eyebrow}>PROFILE</Text>
-      <Text style={styles.name}>{profile.fullName}</Text>
-      <Text style={styles.headline}>{profile.headline}</Text>
-      <View style={styles.card}>
-        <Text style={styles.label}>PROFESSIONAL SUMMARY</Text>
-        <Text style={styles.body}>{profile.summary}</Text>
-      </View>
-      <Text style={styles.section}>Contact</Text>
-      <Info label="Email" value={profile.email} />
-      <Info label="Location" value={profile.location} />
-      <Info label="Visibility" value={profile.visibility} />
-    </View>
-  );
+  const { colors } = useTheme();
+  return <ScrollView contentContainerStyle={styles.container}>
+    <Text style={[styles.eyebrow,{color:colors.accent}]}>PROFILE</Text>
+    <Text style={[styles.name,{color:colors.text}]}>{profile.fullName}</Text>
+    <Text style={[styles.headline,{color:colors.textSecondary}]}>{profile.headline}</Text>
+    <View style={[styles.card,{backgroundColor:colors.surfaceRaised,borderColor:colors.border}]}><Text style={[styles.label,{color:colors.textMuted}]}>PROFESSIONAL SUMMARY</Text><Text style={[styles.body,{color:colors.textSecondary}]}>{profile.summary}</Text></View>
+    <Text style={[styles.section,{color:colors.text}]}>Contact</Text>
+    <Info label="Email" value={profile.email}/><Info label="Location" value={profile.location}/><Info label="Visibility" value={profile.visibility}/>
+  </ScrollView>;
 }
-
-function Info({ label, value }: { label: string; value?: string }) {
-  return <View style={styles.info}><Text style={styles.label}>{label}</Text><Text style={styles.value}>{value || "Not set"}</Text></View>;
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24 },
-  eyebrow: { color: colors.textMuted, fontSize: 12, fontWeight: "700", letterSpacing: 2 },
-  name: { color: colors.text, fontSize: 30, fontWeight: "800", marginTop: 10 },
-  headline: { color: colors.textSecondary, fontSize: 16, marginTop: 6 },
-  card: { backgroundColor: colors.surfaceRaised, borderRadius: 18, padding: 18, borderWidth: 1, borderColor: colors.border, marginTop: 24 },
-  label: { color: colors.textMuted, fontSize: 11, fontWeight: "700", letterSpacing: 1.2 },
-  body: { color: colors.textSecondary, fontSize: 14, lineHeight: 21, marginTop: 9 },
-  section: { color: colors.text, fontSize: 20, fontWeight: "700", marginTop: 28, marginBottom: 10 },
-  info: { backgroundColor: colors.surface, borderRadius: 14, padding: 15, marginBottom: 8, borderWidth: 1, borderColor: colors.border },
-  value: { color: colors.text, fontSize: 14, marginTop: 5 },
-});
+function Info({label,value}:{label:string;value?:string}){const {colors}=useTheme();return <View style={[styles.info,{backgroundColor:colors.surface,borderColor:colors.border}]}><Text style={[styles.label,{color:colors.textMuted}]}>{label}</Text><Text style={[styles.value,{color:colors.text}]}>{value||"Not set"}</Text></View>}
+const styles=StyleSheet.create({container:{padding:22,paddingBottom:48},eyebrow:{fontSize:12,fontWeight:"800",letterSpacing:2},name:{fontSize:30,fontWeight:"800",marginTop:9},headline:{fontSize:16,marginTop:6},card:{borderRadius:20,padding:19,borderWidth:1,marginTop:24},label:{fontSize:10,fontWeight:"800",letterSpacing:1.2},body:{fontSize:14,lineHeight:21,marginTop:9},section:{fontSize:20,fontWeight:"800",marginTop:28,marginBottom:10},info:{borderRadius:15,padding:15,marginBottom:8,borderWidth:1},value:{fontSize:14,marginTop:5}});
