@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { createAccount, getAccount, resetPassword, signIn } from "../data/authStorage";
+import { createAccount, resetPassword, signIn } from "../data/authStorage";
 import { useTheme } from "../theme/ThemeContext";
 type Mode="signin"|"signup"|"reset";
 export function AuthScreen({onAuthenticated}:{onAuthenticated:(isNewUser:boolean)=>void}){
  const {colors}=useTheme(); const [mode,setMode]=useState<Mode>("signin"); const [name,setName]=useState(""); const [email,setEmail]=useState(""); const [password,setPassword]=useState(""); const submit=async()=>{
-  if(!email.trim()||(mode==="signup"&&!name.trim())||(mode==="signin"&&!password.trim()))return;
-  if(mode==="signup"){const existing=await getAccount();if(existing){Alert.alert("Account exists","Use Sign In for this device.");return;}await createAccount({name:name.trim(),email:email.trim(),password});onAuthenticated(true);return;}
+  if(!email.trim()||(mode==="signup"&&(!name.trim()||!password.trim()))||(mode==="signin"&&!password.trim())){Alert.alert("Missing information","Enter all required fields.");return;}
+  if(mode==="signup"){try{await createAccount({name:name.trim(),email:email.trim(),password});onAuthenticated(true);}catch(error){const code=(error as {code?:string})?.code||"unknown";Alert.alert("Create account failed",code); }return;}
   if(mode==="reset"){const ok=await resetPassword(email);Alert.alert(ok?"Reset email sent":"Unable to send reset email",ok?"Check your email for the Firebase password reset link.":"Check the email address and Firebase configuration.");if(ok)setMode("signin");return;}
-  const ok=await signIn(email,password);if(ok)onAuthenticated(false);else Alert.alert("Sign in failed","The email or password does not match the local account.");
+  try{const ok=await signIn(email,password);if(ok)onAuthenticated(false);}catch(error){const code=(error as {code?:string})?.code||"unknown";Alert.alert("Sign in failed",code);}
  };
  return <KeyboardAvoidingView style={[styles.safe,{backgroundColor:colors.background}]} behavior={Platform.OS==="ios"?"padding":undefined}><View style={styles.container}>
   <View style={[styles.logo,{backgroundColor:colors.accentSoft}]}><Text style={[styles.logoText,{color:colors.accent}]}>P</Text></View><Text style={[styles.title,{color:colors.text}]}>Pro-Filio</Text><Text style={[styles.subtitle,{color:colors.textSecondary}]}>{mode==="reset"?"Reset the local account password.":mode==="signin"?"Your professional identity, in one place.":"Create your professional identity."}</Text>
