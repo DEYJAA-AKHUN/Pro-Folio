@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { colors } from "../theme/colors";
+import { useTheme } from "../theme/ThemeContext";
 import { mockProfile } from "../data/mockProfile";
 import { DashboardScreen } from "../screens/DashboardScreen";
 import { ProfileScreen } from "../screens/ProfileScreen";
@@ -11,43 +11,23 @@ import { TimelineScreen } from "../screens/TimelineScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
 
 type Tab = "Home" | "Profile" | "Career" | "Portfolio" | "Timeline" | "Settings";
-
 const tabs: Tab[] = ["Home", "Profile", "Career", "Portfolio", "Timeline", "Settings"];
+const icons: Record<Tab,string> = { Home:"⌂", Profile:"●", Career:"◆", Portfolio:"▣", Timeline:"│", Settings:"⚙" };
 
 export function AppShell() {
-  const [tab, setTab] = useState<Tab>("Home");
-
-  const content = {
-    Home: <DashboardScreen profile={mockProfile} />,
-    Profile: <ProfileScreen profile={mockProfile} />,
-    Career: <CareerScreen profile={mockProfile} />,
-    Portfolio: <PortfolioScreen profile={mockProfile} />,
-    Timeline: <TimelineScreen profile={mockProfile} />,
-    Settings: <SettingsScreen />,
-  }[tab];
-
-  return (
-    <SafeAreaView style={styles.safe}>
-      <StatusBar style="light" />
-      <View style={styles.content}>{content}</View>
-      <View style={styles.nav}>
-        {tabs.map(item => (
-          <TouchableOpacity key={item} style={styles.navItem} onPress={() => setTab(item)} activeOpacity={0.7}>
-            <Text style={[styles.navIcon, tab === item && styles.active]}>{item === "Home" ? "⌂" : item[0]}</Text>
-            <Text style={[styles.navLabel, tab === item && styles.active]}>{item}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </SafeAreaView>
-  );
+  const [tab,setTab] = useState<Tab>("Home");
+  const { colors, themeName } = useTheme();
+  const content = { Home:<DashboardScreen profile={mockProfile}/>, Profile:<ProfileScreen profile={mockProfile}/>, Career:<CareerScreen profile={mockProfile}/>, Portfolio:<PortfolioScreen profile={mockProfile}/>, Timeline:<TimelineScreen profile={mockProfile}/>, Settings:<SettingsScreen/> }[tab];
+  const dark = ["midnight","obsidian","titanium"].includes(themeName);
+  return <SafeAreaView style={[styles.safe,{backgroundColor:colors.background}]}>
+    <StatusBar style={dark ? "light" : "dark"}/>
+    <View style={styles.content}>{content}</View>
+    <View style={[styles.nav,{backgroundColor:colors.surfaceRaised,borderTopColor:colors.border}]}>
+      {tabs.map(item=>{const active=tab===item;return <TouchableOpacity key={item} style={styles.navItem} onPress={()=>setTab(item)} activeOpacity={0.75}>
+        <View style={[styles.navIconWrap,active&&{backgroundColor:colors.accentSoft}]}><Text style={[styles.navIcon,{color:active?colors.accent:colors.textMuted}]}>{icons[item]}</Text></View>
+        <Text style={[styles.navLabel,{color:active?colors.accent:colors.textMuted}]}>{item}</Text>
+      </TouchableOpacity>})}
+    </View>
+  </SafeAreaView>;
 }
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
-  content: { flex: 1 },
-  nav: { flexDirection: "row", backgroundColor: colors.surfaceRaised, borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 7, paddingBottom: 8 },
-  navItem: { flex: 1, alignItems: "center", minWidth: 0 },
-  navIcon: { color: colors.textMuted, fontSize: 16, fontWeight: "800" },
-  active: { color: colors.text },
-  navLabel: { color: colors.textMuted, fontSize: 9, marginTop: 3 },
-});
+const styles=StyleSheet.create({safe:{flex:1},content:{flex:1},nav:{flexDirection:"row",borderTopWidth:1,paddingTop:7,paddingBottom:8},navItem:{flex:1,alignItems:"center",minWidth:0},navIconWrap:{width:34,height:28,borderRadius:14,alignItems:"center",justifyContent:"center"},navIcon:{fontSize:15,fontWeight:"800"},navLabel:{fontSize:9,marginTop:2,fontWeight:"600"}});
