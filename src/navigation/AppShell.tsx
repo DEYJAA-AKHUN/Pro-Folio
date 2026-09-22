@@ -13,18 +13,21 @@ import { SettingsScreen } from "../screens/SettingsScreen";
 import { ManageProfileScreen } from "../screens/ManageProfileScreen";
 import { DocumentsScreen } from "../screens/DocumentsScreen";
 import { PublicProfileScreen } from "../screens/PublicProfileScreen";
+import { DiscoverScreen } from "../screens/DiscoverScreen";
 
 type Tab="Home"|"Profile"|"Career"|"Portfolio"|"Timeline"|"Settings";
 const tabs:Tab[]=["Home","Profile","Career","Portfolio","Timeline","Settings"];
-const icons:Record<Tab,string>={Home:"⌂",Profile:"●",Career:"◆",Portfolio:"▣",Timeline:"│",Settings:"⚙"};
+const icons:Record<Tab,string>={Home:"⌂",Profile:"◉",Career:"◆",Portfolio:"◇",Timeline:"│",Settings:"⚙"};
 
 export function AppShell({profile,onProfileChange,onSignOut}:{profile?:Profile;onProfileChange?:(p:Profile)=>void;onSignOut?:()=>void}){
- const [tab,setTab]=useState<Tab>("Home"); const [overlay,setOverlay]=useState<"manage"|"documents"|"public"|null>(null); const [localProfile,setLocalProfile]=useState<Profile>(profile??mockProfile); const {colors,themeName}=useTheme(); const current=profile??localProfile; const save=onProfileChange??setLocalProfile;
+ const [tab,setTab]=useState<Tab>("Home"); const [overlay,setOverlay]=useState<"manage"|"documents"|"public"|"discover"|null>(null);
+ const [localProfile,setLocalProfile]=useState<Profile>(profile??mockProfile); const {colors,themeName}=useTheme(); const current=profile??localProfile; const save=onProfileChange??setLocalProfile;
  if(overlay==="manage")return <SafeAreaView style={[styles.safe,{backgroundColor:colors.background}]}><ManageProfileScreen profile={current} onSave={save} onClose={()=>setOverlay(null)}/></SafeAreaView>;
  if(overlay==="documents")return <SafeAreaView style={[styles.safe,{backgroundColor:colors.background}]}><DocumentsScreen profile={current} onSave={save} onClose={()=>setOverlay(null)}/></SafeAreaView>;
  if(overlay==="public")return <SafeAreaView style={[styles.safe,{backgroundColor:colors.background}]}><PublicProfileScreen profile={current} onClose={()=>setOverlay(null)}/></SafeAreaView>;
+ if(overlay==="discover")return <SafeAreaView style={[styles.safe,{backgroundColor:colors.background}]}><DiscoverScreen onClose={()=>setOverlay(null)}/></SafeAreaView>;
  const content={
-  Home:<DashboardScreen profile={current} onManage={()=>setOverlay("manage")}/>,
+  Home:<DashboardScreen profile={current} onManage={()=>setOverlay("manage")} onDiscover={()=>setOverlay("discover")} onPublic={()=>setOverlay("public")}/>,
   Profile:<ProfileScreen profile={current} onSave={save}/>,
   Career:<CareerScreen profile={current} onManage={()=>setOverlay("manage")}/>,
   Portfolio:<PortfolioScreen profile={current} onManage={()=>setOverlay("manage")}/>,
