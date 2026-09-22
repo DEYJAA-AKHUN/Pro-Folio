@@ -1,7 +1,7 @@
 import type { Profile } from "../types/profile";
 export const mockProfile: Profile = {
- id:"local-profile", fullName:"Your Name", headline:"Professional profile in progress",
- summary:"Build one trusted professional identity containing your experience, education, projects, skills and credentials.",
+ id:"local-profile", publicId:"PF-DEMO01", fullName:"Your Name", headline:"Your professional identity",
+ summary:"Create your story, show what you have built, and let people discover your professional profile.",
  email:"", location:"", visibility:"private",
  education:[], employment:[], projects:[], skills:[], certifications:[], achievements:[], documents:[]
 };
