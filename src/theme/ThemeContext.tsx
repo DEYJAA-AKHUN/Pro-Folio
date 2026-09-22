@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
 import { defaultTheme, getTheme, type ThemeColors, type ThemeName } from "./themes";
-const THEME_KEY="pro-filio-theme-v1";
+const THEME_KEY="pro-folio-theme-v2";
 type ThemeContextValue={themeName:ThemeName;colors:ThemeColors;setTheme:(name:ThemeName)=>void};
 const ThemeContext=createContext<ThemeContextValue|undefined>(undefined);
 export function ThemeProvider({children}:PropsWithChildren){
