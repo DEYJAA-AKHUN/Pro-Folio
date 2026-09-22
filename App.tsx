@@ -4,7 +4,7 @@ import { ProfileSetupScreen } from "./src/screens/ProfileSetupScreen";
 import { AppShell } from "./src/navigation/AppShell";
 import { ThemeProvider } from "./src/theme/ThemeContext";
 import { loadStoredProfile, saveStoredProfile } from "./src/data/profileStorage";
-import { hasSession } from "./src/data/authStorage";
+import { hasSession, signOut } from "./src/data/authStorage";
 import { mockProfile } from "./src/data/mockProfile";
 import type { Profile } from "./src/types/profile";
 
@@ -16,6 +16,6 @@ export default function App(){
  return <ThemeProvider>
   {stage==="auth"&&<AuthScreen onAuthenticated={(isNew)=>setStage(isNew?"setup":"app")}/>}
   {stage==="setup"&&<ProfileSetupScreen profile={profile} onComplete={(next)=>{updateProfile(next);setStage("app")}}/>}
-  {stage==="app"&&<AppShell profile={profile} onProfileChange={updateProfile} onSignOut={()=>setStage("auth")}/>}
+  {stage==="app"&&<AppShell profile={profile} onProfileChange={updateProfile} onSignOut={async()=>{await signOut();setStage("auth")}}/>}
  </ThemeProvider>;
 }
