@@ -19,8 +19,8 @@ export function AuthScreen({onAuthenticated}:{onAuthenticated:(isNewUser:boolean
    <TextInput value={email} onChangeText={setEmail} placeholder="Email address" placeholderTextColor={colors.textMuted} style={[styles.input,{color:colors.text,borderColor:colors.border,backgroundColor:colors.surface}]} keyboardType="email-address" autoCapitalize="none"/>
    <TextInput value={password} onChangeText={setPassword} placeholder="Password" placeholderTextColor={colors.textMuted} style={[styles.input,{color:colors.text,borderColor:colors.border,backgroundColor:colors.surface}]} secureTextEntry/>
    {error!==""&&<Text style={[styles.error,{color:"#D64B4B"}]}>{error}</Text>}
-   {mode==="signin"&&<Pressable hitSlop={10} onPress={()=>{setError("");setMode("reset")}}><Text style={[styles.forgot,{color:colors.accent}]}>Forgot password?</Text></TouchableOpacity>}
-   <TouchableOpacity style={[styles.button,{backgroundColor:colors.accent}]} onPress={submit}><Text style={styles.buttonText}>{mode==="signup"?"Create Account":mode==="reset"?"Reset Password":"Sign In"}</Text></TouchableOpacity>
+   {mode==="signin"&&<Pressable hitSlop={10} onPress={()=>{setError("");setMode("reset")}}><Text style={[styles.forgot,{color:colors.accent}]}>Forgot password?</Text></Pressable>}
+   <Pressable style={[styles.button,{backgroundColor:colors.accent}]} onPress={submit}><Text style={styles.buttonText}>{mode==="signup"?"Create Account":mode==="reset"?"Reset Password":"Sign In"}</Text></Pressable>
   </View>
   <View style={styles.switchRow}>{mode!=="reset"&&<><Text style={{color:colors.textSecondary}}>{mode==="signin"?"New to Pro Folio?":"Already have an account?"}</Text><Pressable hitSlop={10} onPress={()=>{setError("");setMode(mode==="signin"?"signup":"signin")}}><Text style={[styles.switch,{color:colors.accent}]}>{mode==="signin"?" Create account":" Sign in"}</Text></Pressable></>}{mode==="reset"&&<Pressable hitSlop={10} onPress={()=>{setError("");setMode("signin")}}><Text style={[styles.switch,{color:colors.accent}]}>Back to sign in</Text></Pressable>}</View>
   <Text style={[styles.footer,{color:colors.textMuted}]}>PRO FOLIO • PROFESSIONAL IDENTITY PLATFORM</Text>
