@@ -9,6 +9,6 @@ export type Achievement = { id:string; title:string; issuer?:string; date?:strin
 export type DocumentItem = { id:string; name:string; type:string; note?:string; visibility:Visibility; };
 
 export type Profile = {
- id:string; fullName:string; headline:string; summary:string; email?:string; phone?:string; location?:string; website?:string; avatarUrl?:string;
+ id:string; publicId:string; fullName:string; headline:string; summary:string; email?:string; phone?:string; location?:string; website?:string; avatarUrl?:string;
  education:Education[]; employment:Employment[]; projects:Project[]; skills:Skill[]; certifications:Certification[]; achievements:Achievement[]; documents:DocumentItem[]; visibility:Visibility;
 };
