@@ -2,20 +2,22 @@
   "expo": {
     "name": "Pro Folio",
     "slug": "pro-folio",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.profolio.app"
+      "bundleIdentifier": "com.profolio.app",
+      "buildNumber": "2"
     },
     "android": {
       "package": "com.profolio.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#0A0B0F"
-      }
+      },
+      "versionCode": 2
     },
     "web": {
       "bundler": "metro"
